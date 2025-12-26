@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AgriDirect — Agricultural Marketplace</title>
+  <link rel="stylesheet" href="./style.css" />
+  <meta name="description" content="AgriDirect — Connect farmers directly with buyers, view market prices, list produce and manage orders." />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1 class="brand">AgriDirect</h1>
+      <nav class="top-nav" aria-label="Main navigation">
+        <button id="btn-market" class="nav-btn active">Market Prices</button>
+        <button id="btn-listings" class="nav-btn">Listings</button>
+        <button id="btn-create" class="nav-btn">Create Listing</button>
+        <button id="btn-messages" class="nav-btn">Messages</button>
+        <select id="role-select" aria-label="role selector" title="Select role">
+          <option value="visitor">Visitor</option>
+          <option value="farmer">Farmer</option>
+          <option value="buyer">Buyer</option>
+        </select>
+        <button id="btn-login" class="primary small" aria-label="Sign in">Sign In</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container main-content" role="main">
+    <section id="market-section" class="panel" aria-labelledby="market-heading">
+      <div class="panel-head">
+        <h2 id="market-heading">Market Prices</h2>
+        <div class="controls">
+          <select id="market-filter" aria-label="Filter by market">
+            <option value="all">All Markets</option>
+            <option value="District A">District A</option>
+            <option value="District B">District B</option>
+            <option value="District C">District C</option>
+          </select>
+          <button id="refresh-prices" class="small">Refresh</button>
+        </div>
+      </div>
+      <div id="prices-list" class="prices-grid" aria-live="polite"></div>
+    </section>
+
+    <section id="listings-section" class="panel hidden" aria-labelledby="listings-heading">
+      <div class="panel-head">
+        <h2 id="listings-heading">Listings</h2>
+        <div class="controls">
+          <input id="search-listings" type="search" placeholder="Search crop or location" aria-label="Search listings" />
+          <select id="filter-crop" aria-label="Filter by crop">
+            <option value="all">All Crops</option>
+          </select>
+        </div>
+      </div>
+      <div id="listings-grid" class="listings-grid" aria-live="polite"></div>
+    </section>
+
+    <section id="create-section" class="panel hidden" aria-labelledby="create-heading">
+      <div class="panel-head">
+        <h2 id="create-heading">Create Listing</h2>
+      </div>
+      <form id="create-form" class="form-card" autocomplete="off" aria-describedby="create-instructions">
+        <div id="create-instructions" class="visually-hidden">Fill in listing details and publish.</div>
+
+        <label>
+          Your name
+          <input id="input-name" name="name" required aria-required="true" />
+        </label>
+
+        <label>
+          Role
+          <select id="input-role" name="role" aria-label="Listing role">
+            <option value="farmer">Farmer</option>
+            <option value="buyer">Buyer</option>
+          </select>
+        </label>
+
+        <label>
+          Crop
+          <input id="input-crop" name="crop" required placeholder="e.g., Tomato" />
+        </label>
+
+        <label>
+          Grade / Quality
+          <input id="input-grade" name="grade" placeholder="e.g., A / Fresh" />
+        </label>
+
+        <label>
+          Quantity
+          <input id="input-qty" name="quantity" required type="number" min="1" />
+        </label>
+
+        <label>
+          Unit
+          <input id="input-unit" name="unit" value="kg" />
+        </label>
+
+        <label>
+          Price (per unit, optional)
+          <input id="input-price" name="price" type="number" min="0" step="0.01" />
+        </label>
+
+        <label>
+          Available from
+          <input id="input-date" name="date" type="date" />
+        </label>
+
+        <label>
+          Location (district / town)
+          <input id="input-location" name="location" required placeholder="District A" />
+        </label>
+
+        <label>
+          Notes
+          <textarea id="input-notes" name="notes" rows="2"></textarea>
+        </label>
+
+        <div class="form-actions">
+          <button type="submit" class="primary">Publish Listing</button>
+          <button type="button" id="create-clear">Clear</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="messages-section" class="panel hidden" aria-labelledby="messages-heading">
+      <div class="panel-head">
+        <h2 id="messages-heading">Messages</h2>
+        <small>Conversations are stored locally in the browser for prototype testing.</small>
+      </div>
+      <div id="conversations" class="convo-list" aria-live="polite"></div>
+      <div id="convo-window" class="convo-window hidden" aria-hidden="true">
+        <div id="convo-header" class="convo-header" role="status"></div>
+        <div id="convo-messages" class="convo-messages" aria-live="polite"></div>
+        <form id="convo-form" class="convo-form">
+          <input id="convo-input" placeholder="Write a message..." aria-label="Message input" />
+          <button type="submit" class="primary small">Send</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="orders-section" class="panel hidden" aria-labelledby="orders-heading">
+      <div class="panel-head">
+        <h2 id="orders-heading">Orders</h2>
+      </div>
+      <div id="orders-list" class="orders-list"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <small>&copy; AgriDirect 2025 — Agricultural marketplace prototype</small>
+    </div>
+  </footer>
+
+  <template id="price-card">
+    <article class="price-card">
+      <div class="pc-left">
+        <div class="pc-crop"></div>
+        <div class="pc-location"></div>
+      </div>
+      <div class="pc-right">
+        <div class="pc-price"></div>
+        <div class="pc-range"></div>
+      </div>
+    </article>
+  </template>
+
+  <template id="listing-card">
+    <article class="listing-card">
+      <div class="listing-top">
+        <h3 class="listing-crop"></h3>
+        <div class="listing-price"></div>
+      </div>
+      <div class="listing-meta">
+        <div class="meta-item">Qty: <span class="listing-qty"></span></div>
+        <div class="meta-item">Unit: <span class="listing-unit"></span></div>
+        <div class="meta-item">Location: <span class="listing-location"></span></div>
+        <div class="meta-item">From: <span class="listing-date"></span></div>
+      </div>
+      <p class="listing-notes"></p>
+      <div class="listing-actions">
+        <button class="btn-order small">Place Order</button>
+        <button class="btn-message small">Message</button>
+        <button class="btn-accept small hidden">Accept</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>
